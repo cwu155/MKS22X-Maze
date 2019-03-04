@@ -5,7 +5,7 @@ public class Maze{
 
   private char[][] maze;
   private boolean animate; //false by default
-  private int counter, xStart, yStart;
+  public static int rows, xStart, yStart;
 
   /*Constructor loads a maze text file, and sets animate to false by default.
      When the file is not found then:
@@ -24,25 +24,24 @@ public class Maze{
   public Maze(String filename) throws FileNotFoundException{
 
     try {
-      animate = false;
       File text = new File(filename);
       Scanner inf = new Scanner(text);
 
       while(inf.hasNextLine()){
         String line = inf.nextLine();
-        counter += 1;
+        rows += 1;
       }
 
-      maze = new char[counter][];
-      counter = 0;
+      maze = new char[rows][];
+      rows = 0;
 
       File text1 = new File(filename);
       Scanner inf1 = new Scanner(text1);
 
       while(inf1.hasNextLine()){
         String next = inf1.nextLine();
-        maze[counter] = next.toCharArray();
-        counter += 1;
+        maze[rows] = next.toCharArray();
+        rows += 1;
       }
 
     } catch (FileNotFoundException ex){
@@ -99,11 +98,11 @@ public class Maze{
       }
 
     //erase the S.
-      maze[xStart][yStart] = '@';
+      maze[xStart][yStart] = ' ';
 
     //and start solving at the location of the s.
     //return solve(???,???);
-      return (solve(xStart, yStart));
+      return (solve(xStart, yStart, 0));
    }
 
 
@@ -121,17 +120,61 @@ public class Maze{
     All visited spots that are part of the solution are changed to '@'
     */
 
-    private int solve(int row, int col){ //you can add more parameters since this is private
+    //you can add more parameters since this is private.
+    private int solve(int row, int col, int counter){
 
     //automatic animation! You are welcome.
-      if(animate){
-        clearTerminal();
-        System.out.println(this);
-        wait(20);
-      }
 
-            //COMPLETE SOLVE
-      return -1; //so it compiles
+    if(animate){
+      clearTerminal();
+      System.out.println(this);
+      wait(20);
     }
+
+    //COMPLETE SOLVE
+
+    if (maze[row][col] != '#' && maze[row][col] != '@' && maze[row][col] != '.' && maze[row][col] != ' '){
+      return 0;
+    }
+
+    if (maze[row][col] == ' '){
+      maze[row][col] = '@';
+    }
+
+
+    if (maze[row][col] == 'E'){
+      return counter;
+    }
+
+    //Checks the right.
+    if (solve(row, col+1, counter+1) > 0){
+      return solve(row, col+1, counter+1);
+    }
+
+    //Checks the left.
+    if (solve(row, col-1, counter+1) > 0){
+      return solve(row, col-1, counter+1);
+    }
+
+    //Checks upwards.
+    if (solve(row+1, col, counter+1) > 0){
+      return solve(row+1, col, counter+1);
+    }
+
+    //Checks downwards.
+    if (solve(row-1, col, counter+1) > 0){
+      return solve(row-1, col, counter+1);
+    }
+
+      maze[row][col] = '.';
+      return -1;
+    }
+
+  public static void main(String[] args) throws FileNotFoundException {
+    Maze test;
+    test = new Maze("data1.dat");
+    test.solve();
+    System.out.println(test);
+  }
 
 }

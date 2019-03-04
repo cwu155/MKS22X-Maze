@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Driver{
-    public static void main(String[]args) throws FileNotFoundException{
+    public static void main(String[]args){
       String filename = "data1.dat";
       try{
         Maze f;
@@ -13,6 +13,6 @@ public class Driver{
         System.out.println(f);
       }catch(FileNotFoundException e){
         System.out.println("Invalid filename: "+filename);
+      }
     }
-  }
 }
