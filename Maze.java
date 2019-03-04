@@ -27,22 +27,22 @@ public class Maze{
       File text = new File(filename);
       Scanner inf = new Scanner(text);
 
-      while(inf.hasNextLine()){
-        String line = inf.nextLine();
-        rows += 1;
-      }
+        while(inf.hasNextLine()){
+          String line = inf.nextLine();
+          rows += 1;
+        }
 
-      maze = new char[rows][];
-      rows = 0;
+        maze = new char[rows][];
+        rows = 0;
 
       File text1 = new File(filename);
       Scanner inf1 = new Scanner(text1);
 
-      while(inf1.hasNextLine()){
-        String next = inf1.nextLine();
-        maze[rows] = next.toCharArray();
-        rows += 1;
-      }
+        while(inf1.hasNextLine()){
+          String next = inf1.nextLine();
+          maze[rows] = next.toCharArray();
+          rows += 1;
+        }
 
     } catch (FileNotFoundException ex){
       System.out.println("Yikes");
@@ -120,7 +120,7 @@ public class Maze{
     All visited spots that are part of the solution are changed to '@'
     */
 
-    //you can add more parameters since this is private.
+
     private int solve(int row, int col, int counter){
 
     //automatic animation! You are welcome.
@@ -131,45 +131,52 @@ public class Maze{
       wait(20);
     }
 
-    //COMPLETE SOLVE
 
-    if (maze[row][col] != '#' && maze[row][col] != '@' && maze[row][col] != '.' && maze[row][col] != ' '){
-      return 0;
-    }
+    //What happens if the space on the maze isn't empty? You try a different direction!
+    if (maze[row][col] == '#' ||
+        maze[row][col] == '.' ||
+        maze[row][col] == '@'){
+        return 0;
 
-    if (maze[row][col] == ' '){
-      maze[row][col] = '@';
-    }
+    //What happens if the space on the maze is empty? Assigns it to '@' for now.
+    } else if (maze[row][col] == ' '){
+        maze[row][col] = '@';
 
-
-    if (maze[row][col] == 'E'){
-      return counter;
+    //What happens if you found the solution? Returns the # of '@'s?
+    } else if (maze[row][col] == 'E'){
+        return counter;
     }
 
     //Checks the right.
-    if (solve(row, col+1, counter+1) > 0){
-      return solve(row, col+1, counter+1);
+    int right = solve(row, col+1, counter+1);
+    if (right > 0){
+      return right;
     }
 
     //Checks the left.
-    if (solve(row, col-1, counter+1) > 0){
-      return solve(row, col-1, counter+1);
+    int left = solve(row, col-1, counter+1);
+    if (left > 0){
+      return left;
     }
 
     //Checks upwards.
-    if (solve(row+1, col, counter+1) > 0){
-      return solve(row+1, col, counter+1);
+    int up = solve(row+1, col, counter+1);
+    if (up > 0){
+      return up;
     }
 
     //Checks downwards.
-    if (solve(row-1, col, counter+1) > 0){
-      return solve(row-1, col, counter+1);
+    int down = solve(row-1, col, counter+1);
+    if (down > 0){
+      return down;
     }
 
+    //Backtracking?
       maze[row][col] = '.';
       return -1;
-    }
+  }
 
+  //Testing purposes.
   public static void main(String[] args) throws FileNotFoundException {
     Maze test;
     test = new Maze("data1.dat");
